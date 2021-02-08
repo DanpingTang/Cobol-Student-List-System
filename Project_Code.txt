@@ -1,0 +1,72 @@
+      ******************************************************************
+      * Author:Danping Tang
+      * Date:2-05-2021
+      * Purpose:Project1-Write record to an external file
+      * Tectonics: cobc
+      ******************************************************************
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. Project1.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT STUDENT-RECORD-FILE
+               ASSIGN TO "C:\cobol\STU-RECORD.TXT"
+               ORGANISATION IS LINE SEQUENTIAL.
+       DATA DIVISION.
+       FILE SECTION.
+       FD STUDENT-RECORD-FILE.
+       01 STUDENT-RECORD PIC X(70).
+
+       WORKING-STORAGE SECTION.
+       01 WS-STUDENT-RECORD.
+           05 WS-STUDENT-NUMBER  PIC 9(6).
+           05 FILLER PIC X(3)    VALUE SPACES.
+           05 WS-TUITION-OWED    PIC 9(6).
+           05 FILLER PIC X(3)    VALUE SPACES.
+           05 WS-STUDENT-NAME    PIC X(40).
+.
+       01 CONTROL-FIELDS.
+           05 DICISION-FLAG    PIC X(3) VALUE "YES".
+       PROCEDURE DIVISION.
+       100-PRODUCE-STUDENT-RECORDS.
+           PERFORM 201-INITIATE-STUDENT-RECORD.
+           PERFORM 202-ENTER-STUDENT-RECORD UNTIL DICISION-FLAG = "NO".
+           PERFORM 203-CLOSE-FILE.
+
+       201-INITIATE-STUDENT-RECORD.
+           PERFORM 301-OPEN-FILE.
+           PERFORM 302-PROMPT-WHETHER-ENTER-RECORD.
+
+       202-ENTER-STUDENT-RECORD.
+           PERFORM 303-INPUT-DATA.
+           PERFORM 304-WRITE-DATA.
+           PERFORM 302-PROMPT-WHETHER-ENTER-RECORD.
+
+       203-CLOSE-FILE.
+           CLOSE STUDENT-RECORD-FILE.
+           STOP RUN.
+
+       301-OPEN-FILE.
+           OPEN OUTPUT STUDENT-RECORD-FILE.
+
+       302-PROMPT-WHETHER-ENTER-RECORD.
+           DISPLAY "DO YOU WANT TO ADD A NEW RECORD?".
+           ACCEPT DICISION-FLAG.
+
+       303-INPUT-DATA.
+           DISPLAY "PLEASE INPUT STUDENT NUMBER: ".
+           ACCEPT WS-STUDENT-NUMBER.
+
+           DISPLAY "PLEASE INPUT TUITION OWED: ".
+           ACCEPT WS-TUITION-OWED.
+
+           DISPLAY "PLEASE INPUT STUDENT NAME: ".
+           ACCEPT WS-STUDENT-NAME.
+
+       304-WRITE-DATA.
+
+           MOVE WS-STUDENT-RECORD TO STUDENT-RECORD.
+
+           WRITE STUDENT-RECORD.
+
+       END PROGRAM Project1.
